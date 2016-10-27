@@ -126,7 +126,7 @@ public OnClientPostAdminCheck(client)
             
             if(GetConVarInt(g_cVar_bantype) == 0)
             {
-                FormatEx(query, sizeof(query),  "SELECT * FROM %s_bans WHERE ip='%s' AND RemoveType IS NULL AND ends > %d", Prefix, IP, GetTime());
+                FormatEx(query, sizeof(query),  "SELECT * FROM %s_bans WHERE ip='%s' AND RemoveType IS NULL AND ends > %d AND authid != %s", Prefix, IP, GetTime(), steamid);
             }
             else
             {
