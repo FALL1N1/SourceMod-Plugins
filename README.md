@@ -1,3 +1,13 @@
 # Sourcemod - SourceSleuth
 
 Ban multiple accounts on your sourcemod server.
+
+
+# TODO List
+
+- [Done] It shouldn't ban the same player if he already has active ban from SourceBans
+- [Done] A function which would check if latest ban was from SourceSleuth and return the result.
+-
+-
+-
+-
