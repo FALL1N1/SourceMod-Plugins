@@ -179,7 +179,7 @@ public SQL_CheckHim(Handle:owner, Handle:hndl, const String:error[], any:datapac
                     case 1:
                     {
                         new length = SQL_FetchInt(hndl, 6);
-                        new time = length*60;
+                        new time = length;
                         
                         Format(Reason, sizeof(Reason), "[SourceSleuth] %t", "sourcesleuth_banreason");
                         
