@@ -126,6 +126,7 @@ public OnClientPostAdminCheck(client)
             
             if(GetConVarInt(g_cVar_bantype) == 0)
             {
+                // ako ima aktiwen ban i ne e iztekul na sushtiq steamID - da ne banwa pak
                 FormatEx(query, sizeof(query),  "SELECT * FROM %s_bans WHERE ip='%s' AND RemoveType IS NULL AND ends > %d AND authid != %s", Prefix, IP, GetTime(), steamid);
             }
             else
