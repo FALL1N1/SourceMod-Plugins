@@ -149,8 +149,7 @@ public OnClientPostAdminCheck(client)
 public SQL_CheckHim(Handle:owner, Handle:hndl, const String:error[], any:datapack)
 {
     new client;
-    new String:steamid[32], String:IP[32], String:Reason[255], String:text[255];
-    new String:currentSteamId[32];
+    new String:steamid[32], String:IP[32], String:Reason[255], String:text[255], String:currentSteamId[32];
     
     if(datapack != INVALID_HANDLE)
     {
@@ -169,44 +168,47 @@ public SQL_CheckHim(Handle:owner, Handle:hndl, const String:error[], any:datapac
     if (SQL_FetchRow(hndl))
     {
         new TotalBans = SQL_GetRowCount(hndl);
+        char reason_from_db[256];
+        SQL_FetchString(hndl, 8, reason_from_db, sizeof(reason_from_db));
         
-        if(TotalBans > GetConVarInt(g_cVar_bansAllowed))
-        {
-            switch (GetConVarInt(g_cVar_actions))
+        if(StrContains(reason_from_db, "[SourceSleuth]", false) == -1) // ban again only IF the latest ban reason is not releated to SourceSleuth (this will prevent multiple bans)
+            if(TotalBans > GetConVarInt(g_cVar_bansAllowed))
             {
-                case 1:
+                switch (GetConVarInt(g_cVar_actions))
                 {
-                    new length = SQL_FetchInt(hndl, 6);
-                    new time = length*60;
-                    
-                    Format(Reason, sizeof(Reason), "[SourceSleuth] %t", "sourcesleuth_banreason");
-                    
-                    SBBanPlayer(0, client, time, Reason);
-                }
-                case 2:
-                {
-                    new time = GetConVarInt(g_cVar_banduration);
+                    case 1:
+                    {
+                        new length = SQL_FetchInt(hndl, 6);
+                        new time = length*60;
+                        
+                        Format(Reason, sizeof(Reason), "[SourceSleuth] %t", "sourcesleuth_banreason");
+                        
+                        SBBanPlayer(0, client, time, Reason);
+                    }
+                    case 2:
+                    {
+                        new time = GetConVarInt(g_cVar_banduration);
 
-                    Format(Reason, sizeof(Reason), "[SourceSleuth] %t", "sourcesleuth_banreason");
-                    
-                    SBBanPlayer(0, client, time, Reason);
-                }
-                case 3:
-                {
-                    new length = SQL_FetchInt(hndl, 6);
-                    new time = length/60*2;
+                        Format(Reason, sizeof(Reason), "[SourceSleuth] %t", "sourcesleuth_banreason");
+                        
+                        SBBanPlayer(0, client, time, Reason);
+                    }
+                    case 3:
+                    {
+                        new length = SQL_FetchInt(hndl, 6);
+                        new time = length/60*2;
 
-                    Format(Reason, sizeof(Reason), "[SourceSleuth] %t", "sourcesleuth_banreason");
-                    
-                    SBBanPlayer(0, client, time, Reason);
-                }
-                case 4:
-                {
-                    Format(text, sizeof(text), "[SourceSleuth] %t", "sourcesleuth_admintext",client, steamid, IP);
-                    PrintToAdmins("%s", text);
+                        Format(Reason, sizeof(Reason), "[SourceSleuth] %t", "sourcesleuth_banreason");
+                        
+                        SBBanPlayer(0, client, time, Reason);
+                    }
+                    case 4:
+                    {
+                        Format(text, sizeof(text), "[SourceSleuth] %t", "sourcesleuth_admintext",client, steamid, IP);
+                        PrintToAdmins("%s", text);
+                    }
                 }
             }
-        }
     }
 }
 
