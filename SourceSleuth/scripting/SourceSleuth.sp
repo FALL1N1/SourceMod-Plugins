@@ -1,4 +1,5 @@
 #pragma semicolon 1
+#pragma tabsize 0
 #include <sourcemod>
 #undef REQUIRE_PLUGIN
 #include <sourcebans>
@@ -31,14 +32,14 @@ public OnPluginStart()
 {
 	LoadTranslations("sourcesleuth.phrases");
 	
-	CreateConVar("sm_sourcesleuth_version", PLUGIN_VERSION, "SourceSleuth plugin version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("sm_sourcesleuth_version", PLUGIN_VERSION, "SourceSleuth plugin version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	
-	g_cVar_actions = CreateConVar("sm_sleuth_actions", "3", "Sleuth Ban Type: 1 - Original Length, 2 - Custom Length, 3 - Double Length, 4 - Notify Admins Only", FCVAR_PLUGIN, true, 1.0, true, 4.0);
-	g_cVar_banduration = CreateConVar("sm_sleuth_duration", "0", "Required: sm_sleuth_actions 1: Bantime to ban player if we got a match (0 = permanent (defined in minutes) )", FCVAR_PLUGIN);
-	g_cVar_sbprefix = CreateConVar("sm_sleuth_prefix", "sb", "Prexfix for sourcebans tables: Default sb", FCVAR_PLUGIN);
-	g_cVar_bansAllowed = CreateConVar("sm_sleuth_bansallowed", "0", "How many active bans are allowed before we act", FCVAR_PLUGIN);
-	g_cVar_bantype = CreateConVar("sm_sleuth_bantype", "0", "0 - ban all type of lengths, 1 - ban only permanent bans", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	g_cVar_bypass = CreateConVar("sm_sleuth_adminbypass", "0", "0 - Inactivated, 1 - Allow all admins with ban flag to pass the check", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	g_cVar_actions = CreateConVar("sm_sleuth_actions", "3", "Sleuth Ban Type: 1 - Original Length, 2 - Custom Length, 3 - Double Length, 4 - Notify Admins Only");
+	g_cVar_banduration = CreateConVar("sm_sleuth_duration", "0", "Required: sm_sleuth_actions 1: Bantime to ban player if we got a match (0 = permanent (defined in minutes) )");
+	g_cVar_sbprefix = CreateConVar("sm_sleuth_prefix", "sb", "Prexfix for sourcebans tables: Default sb");
+	g_cVar_bansAllowed = CreateConVar("sm_sleuth_bansallowed", "0", "How many active bans are allowed before we act");
+	g_cVar_bantype = CreateConVar("sm_sleuth_bantype", "0", "0 - ban all type of lengths, 1 - ban only permanent bans");
+	g_cVar_bypass = CreateConVar("sm_sleuth_adminbypass", "0", "0 - Inactivated, 1 - Allow all admins with ban flag to pass the check");
 	
 	g_hAllowedArray = CreateArray(256);
 	
@@ -108,8 +109,8 @@ public OnClientPostAdminCheck(client)
 	if(CanUseSourcebans && !IsFakeClient(client))
 	{
 		new String:steamid[32];
-		GetClientAuthString(client, steamid, sizeof(steamid));
-		
+        GetClientAuthId(client, AuthId_Engine, steamid, sizeof(steamid));
+
 		if (GetConVarBool(g_cVar_bypass) && CheckCommandAccess(client, "sleuth_admin", ADMFLAG_BAN, false)) 
 		{
 			return;
