@@ -125,13 +125,13 @@ public OnClientPostAdminCheck(client)
             new String:query[1024];
             
             if(GetConVarInt(g_cVar_bantype) == 0)
-            {
-                // ako ima aktiwen ban i ne e iztekul na sushtiq steamID - da ne banwa pak
+            { 
+                // if there is active ban (on the same steamID) and it is not expired yet - we shouldn't ban him
                 FormatEx(query, sizeof(query),  "SELECT * FROM %s_bans WHERE ip='%s' AND RemoveType IS NULL AND ends > %d AND authid != %s", Prefix, IP, GetTime(), steamid);
             }
             else
             {
-                FormatEx(query, sizeof(query),  "SELECT * FROM %s_bans WHERE ip='%s' AND RemoveType IS NULL AND length='0'", Prefix, IP);
+                FormatEx(query, sizeof(query),  "SELECT * FROM %s_bans WHERE ip='%s' AND RemoveType IS NULL AND length='0' AND authid != %s", Prefix, IP, steamid);
             }
             
             new Handle:datapack = CreateDataPack();
